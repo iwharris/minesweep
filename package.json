@@ -1,0 +1,27 @@
+{
+  "name": "minesweep",
+  "version": "0.0.1",
+  "description": "Simple minesweeper implementation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/iwharris/minesweep"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "author": "Ian Harris",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.16",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2"
+  }
+}
