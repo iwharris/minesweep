@@ -42,4 +42,36 @@ describe('Board', () => {
 			expect(board.isMine([5,5])).toBe(false);
 		});
 	});
+
+	describe('#placeMine', () => {
+
+	});
+
+	describe('#getAdjacentMines', () => {
+		let board: Board;
+
+		beforeEach(() => {
+			board = new Board(5, 5);
+		});
+
+		it('should return zero mines if no mines are adjacent', () => {
+			expect(board.getAdjacentMines([2,2])).toBe(0);
+		});
+
+		it('should return one adjacent mine', () => {
+			board.placeMine([1,1]);
+			expect(board.getAdjacentMines([0, 0])).toBe(1);
+		});
+
+		it('should return multiple adjacent mines', () => {
+			const points: Point[] = [
+				[0,0],
+				[1,0],
+				[0,1],
+			];
+			points.forEach(board.placeMine.bind(board));
+
+			expect(board.getAdjacentMines([1,1])).toBe(3);
+		});
+	});
 });

@@ -1,5 +1,6 @@
-import { neighbors } from '../src/util';
+import { neighbors, getString } from '../src/util';
 import { Point } from '../src/types';
+import { Board } from '../src/board';
 
 describe('Util', () => {
 	describe('#neighbors', () => {
@@ -15,6 +16,22 @@ describe('Util', () => {
 					[4,7], [5,7], [6,7]
 				])
 			);
+		});
+	});
+
+	describe('#getString', () => {
+		it('returns a string representation of the Board state', () => {
+			const board: Board = new Board(3, 3);
+			const points: Point[] = [
+				[0,0],
+				[1,0],
+				[0,1],
+			];
+			points.forEach(board.placeMine.bind(board));
+
+			const representation = getString(board);
+
+			expect(representation).toEqual('MM1\nM31\n110');
 		});
 	});
 });

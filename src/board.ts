@@ -57,9 +57,8 @@ export class Board implements GameState {
 	}
 
 	public getAdjacentMines(point: Point): number {
-		return this.neighbors(point)
-			.filter(p => this.isMine(p))
-			.length;
+		this.assertInBounds(point);
+		return this.adjacency[this.idx(point)];
 	}
 
 	public isInBounds([x, y]: Point): boolean {
@@ -98,16 +97,5 @@ export class Board implements GameState {
 				yield [x,y];
 			}
 		}
-	}
-
-	toString(): string {
-		const charArray = this.adjacency
-			.map((a, idx) => this.mines[idx] ? 'M' : String(a))
-
-		for (let i=this.h-1; i >= 0; i--) {
-			charArray.splice(i*this.w, 0, '\n');
-		}
-
-		return charArray.join('');
 	}
 }
