@@ -91,6 +91,33 @@ export class Board implements GameState {
 		}
 	}
 
+	public isRevealed(p: Point): boolean {
+		this.assertInBounds(p);
+		return this.revealed[this.idx(p)];
+	}
+
+	public revealCell(p: Point): boolean {
+		this.assertInBounds(p);
+		if (this.isMine(p)) return true;
+
+		// Traverse to neighboring cells, revealing empty ones
+		const visited = new Set<number>();
+		const traverse = (p: Point): void => {
+			const i = this.idx(p);
+			this.revealed[i] = true;
+			visited.add(i);
+			if (this.getAdjacentMines(p) > 0) return; // Skip traversing neighbors if this cell has an adjacent mines
+			this.neighbors(p).forEach(np => {
+				const ni = this.idx(np);
+				if (!visited.has(ni) && !this.revealed[ni] && this.getAdjacentMines(np) === 0) traverse(np);
+			});
+		};
+
+		traverse(p);
+
+		return false;
+	}
+
 	public *iterator(): IterableIterator<Point> {
 		for (let y = 0; y < this.height; y++) {
 			for (let x = 0; x < this.width; x++) {

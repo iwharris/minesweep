@@ -18,6 +18,9 @@ export interface GameState {
 
 	getAdjacentMines(point: Point): number;
 
+	isRevealed(point: Point): boolean;
+	revealCell(point: Point): boolean;
+
 	getFlag(point: Point): Flag | undefined;
 	setFlag(point: Point, flag: Flag): void;
 }

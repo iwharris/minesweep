@@ -1,5 +1,6 @@
 import { Point, Flag } from '../src/types';
 import { Board } from '../src/board';
+import { neighbors } from '../src/util';
 
 describe('Board', () => {
 	describe('#constructor', () => {
@@ -141,6 +142,47 @@ describe('Board', () => {
 			expect(() => {
 				board.getFlag([3,3]);
 			}).toThrowError();
+		});
+	});
+
+	describe('#reveallCell', () => {
+		let board: Board;
+
+		beforeEach(() => {
+			board = new Board(3,3);
+		});
+
+		it('should reveal an entire board if empty', () => {
+			expect(board.revealCell([2,2])).toBe(false);
+			expect(Array.from(board.iterator()).every(board.isRevealed.bind(board))).toBe(true);
+		});
+
+		it('should return true if revealing a cell that contains a mine', () => {
+			board.placeMine([2,2]);
+			expect(board.revealCell([2,2])).toBe(true);
+		});
+
+		it('should reveal cells but do not reveal cells with adjacent mines', () => {
+			board.placeMine([0,0]);
+
+			expect(board.revealCell([2,2])).toBe(false);
+
+			const revealed: Point[] = [[2,2], [2,1], [2,0], [1,2], [0,2]];
+			const unrevealed: Point[] = [[0,0], [0,1], [1,0], [1,1]];
+
+			revealed.forEach(p => expect(board.isRevealed(p)).toBe(true));
+			unrevealed.forEach(p => expect(board.isRevealed(p)).toBe(false));
+		});
+
+		it('should only reveal the selected cell if it has adjacent mines', () => {
+			board.placeMine([0,0]);
+
+			expect(board.revealCell([1,1])).toBe(false);
+			expect(board.isRevealed([1,1])).toBe(true);
+
+			const unrevealed: Point[] = [[0,0], [0,1], [1,0], [2,0], [0,2], [2,1], [1,2], [2,2]];
+
+			unrevealed.forEach(p => expect(board.isRevealed(p)).toBe(false));
 		});
 	});
 });
