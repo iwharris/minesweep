@@ -44,7 +44,32 @@ describe('Board', () => {
 	});
 
 	describe('#placeMine', () => {
+		let board: Board;
 
+		beforeEach(() => {
+			board = new Board(5, 5);
+		});
+
+		it('should update mine counts when adding a mine', () => {
+			expect(board.totalMines).toBe(0);
+
+			board.placeMine([1,1]);
+
+			expect(board.totalMines).toBe(1);
+		});
+
+		it('should not change mine counts when adding a mine on top of an existing one', () => {
+			board.placeMine([1,1]);
+			board.placeMine([1,1]);
+
+			expect(board.totalMines).toBe(1);
+		});
+
+		it('should throw an error if placing a mine out of bounds', () => {
+			expect(() => {
+				board.placeMine([6,6]);
+			}).toThrowError();
+		});
 	});
 
 	describe('#getAdjacentMines', () => {
@@ -72,6 +97,50 @@ describe('Board', () => {
 			points.forEach(board.placeMine.bind(board));
 
 			expect(board.getAdjacentMines([1,1])).toBe(3);
+		});
+	});
+
+	describe('flags', () => {
+		let board: Board;
+
+		beforeEach(() => {
+			board = new Board(2,2);
+		});
+
+		it('should get nothing from an unflagged cell', () => {
+			expect(board.getFlag([1,1])).toBeUndefined();
+		});
+
+		it('should set flags in bounds and retrieve their value', () => {
+			board.setFlag([1,1], Flag.FLAGGED_MINE);
+
+			expect(board.getFlag([1,1])).toBe(Flag.FLAGGED_MINE);
+		});
+
+		it('should replace a flag value with another', () => {
+			board.setFlag([1,1], Flag.FLAGGED_MINE);
+			board.setFlag([1,1], Flag.POSSIBLE_MINE);
+
+			expect(board.getFlag([1,1])).toBe(Flag.POSSIBLE_MINE);
+		});
+
+		it('should unset a flag value', () => {
+			board.setFlag([1,1], Flag.FLAGGED_MINE);
+			board.setFlag([1,1], undefined);
+
+			expect(board.getFlag([1,1])).toBeUndefined();
+		});
+
+		it('should throw an error when setting a flag out of bounds', () => {
+			expect(() => {
+				board.setFlag([3,3], Flag.FLAGGED_MINE);
+			}).toThrowError();
+		});
+
+		it('should throw an error when getting a flag out of bounds', () => {
+			expect(() => {
+				board.getFlag([3,3]);
+			}).toThrowError();
 		});
 	});
 });

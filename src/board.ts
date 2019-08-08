@@ -75,7 +75,7 @@ export class Board implements GameState {
 		return this.flags[this.idx(point)];
 	}
 
-	public setFlag(point: Point, flag: Flag): void {
+	public setFlag(point: Point, flag: Flag | undefined): void {
 		this.assertInBounds(point);
 		this.flags[this.idx(point)] = flag;
 	}
